@@ -26,7 +26,7 @@ class Fib extends Component {
   }
 
   renderSeenIndices() {
-    return this.state.seenIndices.map(({ number }) => number.join(", "));
+    return this.state.seenIndices.map(({ number }) => number).join(", ");
   }
   renderValues() {
     const entries = [];
@@ -37,6 +37,7 @@ class Fib extends Component {
         </div>
       );
     }
+    return entries;
   }
 
   handleSubmit = async event => {

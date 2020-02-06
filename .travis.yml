@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t sandeshkumar/client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true sandeshkumar/client-test npm test
+  # Can add multiple test suites for other projects as well
+
+after_success:
+  - docker build -t sandeshkumar/multi-client ./client
+  - docker build -t sandeshkumar/multi-nginx ./nginx
+  - docker build -t sandeshkumar/multi-server ./server
+  - docker build -t sandeshkumar/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push images to docker hub
+  - docker push sandeshkumar/multi-client
+  - docker push sandeshkumar/multi-nginx
+  - docker push sandeshkumar/multi-server
+  - docker push sandeshkumar/multi-worker
